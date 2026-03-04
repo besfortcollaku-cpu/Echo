@@ -1,0 +1,2 @@
+// Episode 8: The Truth
+const episode8 = {"start": {"text": "Your phone displays a final message: "You were chosen because you noticed."", "choices": [{"text": "Accept the signal", "next": "accept"}, {"text": "Destroy the transmitter", "next": "destroy"}]}, "accept": {"text": "The red light begins blinking again. This time, you"re controlling it.", "choices": []}, "destroy": {"text": "The transmitter sparks and dies. Silence returns to the city.", "choices": []}};

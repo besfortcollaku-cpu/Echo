@@ -1,0 +1,2 @@
+// Episode 3: The Envelope
+const episode3 = {"start": {"text": "Inside the envelope is a photograph of your apartment building. A red circle marks your window.", "choices": [{"text": "Check outside again", "next": "outside"}, {"text": "Turn on the TV", "next": "tv"}]}, "outside": {"text": "The red light across the street turns back on.", "choices": []}, "tv": {"text": "Static fills the screen. A faint whisper repeats: "Too late."", "choices": []}};

@@ -1,0 +1,2 @@
+// Episode 7: The Operator
+const episode7 = {"start": {"text": "On the rooftop you find a strange transmitter device connected to a blinking red light.", "choices": [{"text": "Turn it off", "next": "off"}, {"text": "Inspect the device", "next": "inspect"}]}, "off": {"text": "The city suddenly goes dark.", "choices": []}, "inspect": {"text": "A message appears on your phone: "You weren"t supposed to find this."", "choices": []}};

@@ -1,0 +1,2 @@
+// Episode 4: The Camera
+const episode4 = {"start": {"text": "Your phone camera activates by itself. It points at the window.", "choices": [{"text": "Close the curtains", "next": "curtains"}, {"text": "Watch the camera feed", "next": "feed"}]}, "curtains": {"text": "The camera turns off instantly.", "choices": []}, "feed": {"text": "You see a silhouette standing on the rooftop across the street.", "choices": []}};

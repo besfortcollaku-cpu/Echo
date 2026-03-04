@@ -1,0 +1,2 @@
+// Episode 6: The Rooftop
+const episode6 = {"start": {"text": "You decide to investigate the building across the street.", "choices": [{"text": "Enter through the lobby", "next": "lobby"}, {"text": "Use the fire escape", "next": "escape"}]}, "lobby": {"text": "The lights flicker. No one is inside.", "choices": []}, "escape": {"text": "The metal stairs creak loudly as you climb.", "choices": []}};
