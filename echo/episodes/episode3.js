@@ -1,5 +1,5 @@
 // Episode 3 — The Envelope
-const episode3 = {
+window.episode3 = {
   "start": {
     "text": "The photograph shows your apartment window circled in red ink.",
     "choices": [

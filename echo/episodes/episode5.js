@@ -1,5 +1,5 @@
 // Episode 5 — The Signal
-const episode5 = {
+window.episode5 = {
   "start": {
     "text": "Your phone displays a strange signal meter climbing rapidly.",
     "choices": [

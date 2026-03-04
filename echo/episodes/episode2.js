@@ -1,5 +1,5 @@
 // Episode 2 — The Visitor
-const episode2 = {
+window.episode2 = {
   "start": {
     "text": "Three slow knocks echo from your door. Your phone shows a message: 'Do NOT open it.'",
     "choices": [

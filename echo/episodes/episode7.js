@@ -1,5 +1,5 @@
 // Episode 7 — The Operator
-const episode7 = {
+window.episode7 = {
   "start": {
     "text": "On the rooftop you find a transmitter connected to the blinking red light.",
     "choices": [

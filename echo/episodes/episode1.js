@@ -1,5 +1,5 @@
 // Episode 1 — 2:17 AM
-const episode1 = {
+window.episode1 = {
   "start": {
     "text": "Your phone vibrates at 2:17 AM. A message appears: 'If you can read this, you're already involved.' Another message follows: 'Look outside.'",
     "choices": [

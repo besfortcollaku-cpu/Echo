@@ -1,5 +1,5 @@
 // Episode 4 — The Camera
-const episode4 = {
+window.episode4 = {
   "start": {
     "text": "Your phone camera turns on by itself and points at the window.",
     "choices": [

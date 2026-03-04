@@ -1,5 +1,5 @@
 // Episode 6 — The Rooftop
-const episode6 = {
+window.episode6 = {
   "start": {
     "text": "You decide to investigate the building across the street.",
     "choices": [

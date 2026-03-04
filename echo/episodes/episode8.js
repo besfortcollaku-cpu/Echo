@@ -1,5 +1,5 @@
 // Episode 8 — The Truth
-const episode8 = {
+window.episode8 = {
   "start": {
     "text": "Your phone displays a final message: 'You noticed the signal. That means you are ready.'",
     "choices": [
