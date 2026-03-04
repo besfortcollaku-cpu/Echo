@@ -1,4 +1,3 @@
-// Basic navigation between home and episode scenes
 let currentScene = null;
 
 // Show home screen
@@ -46,13 +45,13 @@ function showHome() {
     `;
 }
 
-// Start a scene
+// Start episode
 function startEpisode(scene) {
     currentScene = scene;
     showScene(currentScene);
 }
 
-// Display a scene with choices
+// Show a scene and its choices
 function showScene(scene) {
     const app = document.getElementById("app");
     app.innerHTML = `<p>${scene.text}</p>`;
@@ -68,5 +67,5 @@ function showScene(scene) {
     }
 }
 
-// Initialize home screen
+// Start at home screen
 showHome();
