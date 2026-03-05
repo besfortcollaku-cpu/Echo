@@ -1,3 +1,6 @@
+
+// Signal Stories — engine + categories (static hosting friendly)
+
 const APP = {
   appName: "Signal Stories",
   storageKey: "signalStories.save.v1",
@@ -8,6 +11,7 @@ const APP = {
     { id: "romance", title: "💙 Romance", subtitle: "Love, drama, choices" },
   ],
 
+  // episode files must define: window.episode1, window.episode2, ...
   episodes: [
     { id: 1, title: "The Locked Signal — Ep 1", dataVar: "episode1", isFree: true,  categoryId: "horror" },
     { id: 2, title: "The Visitor — Ep 2",      dataVar: "episode2", isFree: false, categoryId: "horror" },
@@ -20,6 +24,60 @@ const APP = {
   ],
 };
 
+// ---------- State ----------
+let state = loadState() || {
+  unlockedEpisodeIds: [1],  // Episode 1 free
+  currentEpisodeId: null,
+  currentSceneId: null,
+  history: []               // stack of {episodeId, sceneId}
+};
+
+// ---------- DOM helpers ----------
+const root = document.getElementById("app");
+
+function render(html) {
+  root.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+// ---------- Storage ----------
+function saveState() {
+  try { localStorage.setItem(APP.storageKey, JSON.stringify(state)); } catch (_) {}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(APP.storageKey);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+}
+
+// ---------- Episode helpers ----------
+function getEpisodeMeta(episodeId) {
+  return APP.episodes.find(e => e.id === episodeId) || null;
+}
+
+function getEpisodeData(episodeId) {
+  const meta = getEpisodeMeta(episodeId);
+  if (!meta) return null;
+  return window[meta.dataVar] || null; // requires window.episodeN
+}
+
+function isUnlocked(episodeId) {
+  const meta = getEpisodeMeta(episodeId);
+  if (!meta) return false;
+  if (meta.isFree) return true;
+  return state.unlockedEpisodeIds.includes(episodeId);
+}
+
+// ---------- Screens ----------
 function showCategories() {
   const cont = (state.currentEpisodeId && state.currentSceneId)
     ? `
@@ -72,16 +130,12 @@ function showCategories() {
   });
 
   root.querySelectorAll("button[data-cat]").forEach(b => {
-    b.addEventListener("click", () => {
-      const categoryId = b.getAttribute("data-cat");
-      showCategory(categoryId);
-    });
+    b.addEventListener("click", () => showCategory(b.getAttribute("data-cat")));
   });
 }
 
 function showCategory(categoryId) {
   const cat = APP.categories.find(c => c.id === categoryId);
-
   const eps = APP.episodes.filter(e => e.categoryId === categoryId);
 
   const list = eps.map(ep => {
@@ -127,3 +181,151 @@ function showCategory(categoryId) {
     });
   });
 }
+
+function showUnlock(episodeId) {
+  const meta = getEpisodeMeta(episodeId);
+  render(`
+    <div class="header">
+      <h1>${escapeHtml(meta?.title || "Locked")}</h1>
+      <button class="lang" id="backBtn">Back</button>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <p><strong>This episode is locked.</strong></p>
+        <p>For now, “Unlock now” simulates a purchase. Later you can replace this with Gumroad/Stripe.</p>
+        <button class="choice" id="unlockNow">Unlock now</button>
+      </div>
+    </div>
+  `);
+
+  document.getElementById("backBtn").addEventListener("click", showCategories);
+
+  document.getElementById("unlockNow").addEventListener("click", () => {
+    if (!state.unlockedEpisodeIds.includes(episodeId)) {
+      state.unlockedEpisodeIds.push(episodeId);
+      saveState();
+    }
+    startEpisode(episodeId);
+  });
+}
+
+// ---------- Game flow ----------
+function startEpisode(episodeId) {
+  if (!isUnlocked(episodeId)) return showUnlock(episodeId);
+
+  const data = getEpisodeData(episodeId);
+  if (!data) {
+    render(`
+      <div class="section">
+        <div class="card">
+          <p><strong>Episode data not loaded.</strong> Check your script tags in index.html.</p>
+          <p>Expected: <code>window.${escapeHtml(getEpisodeMeta(episodeId)?.dataVar || "episodeN")}</code> to exist.</p>
+          <button class="choice" id="home">Back</button>
+        </div>
+      </div>
+    `);
+    document.getElementById("home").addEventListener("click", showCategories);
+    return;
+  }
+
+  // Start scene key must be "start"
+  goTo(episodeId, "start", true);
+}
+
+function goTo(episodeId, sceneId, pushHistory = true) {
+  const data = getEpisodeData(episodeId);
+  const scene = data?.[sceneId];
+
+  if (!scene) {
+    render(`
+      <div class="section">
+        <div class="card">
+          <p>Scene not found: <strong>${escapeHtml(sceneId)}</strong></p>
+          <button class="choice" id="home">Back</button>
+        </div>
+      </div>
+    `);
+    document.getElementById("home").addEventListener("click", showCategories);
+    return;
+  }
+
+  if (pushHistory && state.currentEpisodeId && state.currentSceneId) {
+    state.history.push({ episodeId: state.currentEpisodeId, sceneId: state.currentSceneId });
+  }
+
+  state.currentEpisodeId = episodeId;
+  state.currentSceneId = sceneId;
+  saveState();
+
+  renderScene(episodeId, sceneId, scene);
+}
+
+function renderScene(episodeId, sceneId, scene) {
+  const meta = getEpisodeMeta(episodeId);
+
+  render(`
+    <div class="header">
+      <h1>${escapeHtml(meta?.title || "Story")}</h1>
+      <button class="lang" id="homeBtn">Home</button>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <p>${escapeHtml(scene.text || "")}</p>
+        <div id="choices"></div>
+
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <button class="choice" id="backBtn">Back</button>
+        </div>
+      </div>
+    </div>
+  `);
+
+  document.getElementById("homeBtn").addEventListener("click", showCategories);
+
+  document.getElementById("backBtn").addEventListener("click", () => {
+    const prev = state.history.pop();
+    saveState();
+    if (!prev) return showCategories();
+    goTo(prev.episodeId, prev.sceneId, false);
+  });
+
+  const choicesDiv = document.getElementById("choices");
+  const choices = Array.isArray(scene.choices) ? scene.choices : [];
+
+  if (choices.length === 0) {
+    // End of episode: offer next episode
+    const nextEpId = episodeId + 1;
+    const nextMeta = getEpisodeMeta(nextEpId);
+    if (nextMeta) {
+      const locked = !isUnlocked(nextEpId);
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.textContent = locked ? "Next Episode (Locked)" : "Next Episode";
+      btn.addEventListener("click", () => locked ? showUnlock(nextEpId) : startEpisode(nextEpId));
+      choicesDiv.appendChild(btn);
+    } else {
+      const btn = document.createElement("button");
+      btn.className = "choice";
+      btn.textContent = "Back to Categories";
+      btn.addEventListener("click", showCategories);
+      choicesDiv.appendChild(btn);
+    }
+    return;
+  }
+
+  choices.forEach(c => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = String(c.text || "Continue");
+    btn.addEventListener("click", () => {
+      if (typeof c.next !== "string") return;
+      goTo(episodeId, c.next, true);
+    });
+    choicesDiv.appendChild(btn);
+  });
+}
+
+// Boot
+showCategories();
