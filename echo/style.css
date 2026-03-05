@@ -104,16 +104,21 @@ body {
   margin-bottom:10px;
 }
 
+.art-wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:18px;
+  margin-bottom:8px;
+}
+
 .episode-art{
-  width:75%;
-  max-width:260px;
-  height:260px;
+  width:70%;
+  max-width:auto;
+  height:240px;
 
   opacity:0.95;
 
-  filter: drop-shadow(0 12px 20px rgba(0,0,0,.6));
-
-  transition: transform .2s ease;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.6));
 }
 
 .episode-art:hover{
