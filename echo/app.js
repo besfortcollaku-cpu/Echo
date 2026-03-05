@@ -36,19 +36,19 @@ const APP = {
   // Example: window.episode1, window.episode2 ... and romance episodes window.romance1_ep1 ...
   episodes: [
     // Horror story: Locked Signal (8 eps)
-    { id: 1, storyId: "locked-signal", ep: 1, title: "Ep 1 — 2:17 AM", dataVar: "episode1" },
-    { id: 2, storyId: "locked-signal", ep: 2, title: "Ep 2 — The Visitor", dataVar: "episode2" },
-    { id: 3, storyId: "locked-signal", ep: 3, title: "Ep 3 — The Envelope", dataVar: "episode3" },
-    { id: 4, storyId: "locked-signal", ep: 4, title: "Ep 4 — The Camera", dataVar: "episode4" },
-    { id: 5, storyId: "locked-signal", ep: 5, title: "Ep 5 — The Signal", dataVar: "episode5" },
-    { id: 6, storyId: "locked-signal", ep: 6, title: "Ep 6 — The Rooftop", dataVar: "episode6" },
-    { id: 7, storyId: "locked-signal", ep: 7, title: "Ep 7 — The Operator", dataVar: "episode7" },
-    { id: 8, storyId: "locked-signal", ep: 8, title: "Ep 8 — The Truth", dataVar: "episode8" },
+    { id: 1, storyId: "locked-signal", ep: 1, title: "Ep 1 — 2:17 AM", dataVar: "episode1", art: "img/horror/locked-signal/ep01.png" },
+    { id: 2, storyId: "locked-signal", ep: 2, title: "Ep 2 — The Visitor", dataVar: "episode2", art: "img/horror/locked-signal/ep02.png" },
+    { id: 3, storyId: "locked-signal", ep: 3, title: "Ep 3 — The Envelope", dataVar: "episode3", art: "img/horror/locked-signal/ep03.png" },
+    { id: 4, storyId: "locked-signal", ep: 4, title: "Ep 4 — The Camera", dataVar: "episode4", art: "img/horror/locked-signal/ep04.png" },
+    { id: 5, storyId: "locked-signal", ep: 5, title: "Ep 5 — The Signal", dataVar: "episode5", art: "img/horror/locked-signal/ep05.png" },
+    { id: 6, storyId: "locked-signal", ep: 6, title: "Ep 6 — The Rooftop", dataVar: "episode6", art: "img/horror/locked-signal/ep06.png" },
+    { id: 7, storyId: "locked-signal", ep: 7, title: "Ep 7 — The Operator", dataVar: "episode7", art: "img/horror/locked-signal/ep07.png" },
+    { id: 8, storyId: "locked-signal", ep: 8, title: "Ep 8 — The Truth", dataVar: "episode8", art: "img/horror/locked-signal/ep08.png" },
 
     // Romance story: Late Night Messages (3 eps) (you already have this text from earlier message)
-    { id: 101, storyId: "late-night", ep: 1, title: "Ep 1 — The Wrong Number", dataVar: "romance1_ep1" },
-    { id: 102, storyId: "late-night", ep: 2, title: "Ep 2 — Coffee Invitation", dataVar: "romance1_ep2" },
-    { id: 103, storyId: "late-night", ep: 3, title: "Ep 3 — First Date", dataVar: "romance1_ep3" },
+    { id: 101, storyId: "late-night", ep: 1, title: "Ep 1 — The Wrong Number", dataVar: "romance1_ep1", art: "img/romance/late-night/ep01.png" },
+    { id: 102, storyId: "late-night", ep: 2, title: "Ep 2 — Coffee Invitation", dataVar: "romance1_ep2", art: "img/romance/late-night/ep02.png" },
+    { id: 103, storyId: "late-night", ep: 3, title: "Ep 3 — First Date", dataVar: "romance1_ep3", art: "img/romance/late-night/ep03.png" },
   ],
 
   // Ad settings (UI now, real ads later)
@@ -345,6 +345,8 @@ function showInterstitialAd(next) {
 
 function showRewardedAdThenUnlock(storyId, episodeId) {
   const ep = getEpisodeById(episodeId);
+
+  const artHtml = ep?.art ? `\n    <div class=\"art-wrap\"><img class=\"episode-art\" src=\"${ep.art}\" alt=\"\" onerror=\"this.style.display='none';\"></div>\n  ` : "";
   if (!ep) return showEpisodes(storyId);
 
   render(`
@@ -379,6 +381,8 @@ function showRewardedAdThenUnlock(storyId, episodeId) {
 // ---------------- Game flow ----------------
 function startEpisode(storyId, episodeId) {
   const ep = getEpisodeById(episodeId);
+
+  const artHtml = ep?.art ? `\n    <div class=\"art-wrap\"><img class=\"episode-art\" src=\"${ep.art}\" alt=\"\" onerror=\"this.style.display='none';\"></div>\n  ` : "";
   if (!ep) return showEpisodes(storyId);
 
   // lock enforcement
@@ -407,6 +411,8 @@ function startEpisode(storyId, episodeId) {
 
 function goToScene(storyId, episodeId, sceneId, pushHistory = true) {
   const ep = getEpisodeById(episodeId);
+
+  const artHtml = ep?.art ? `\n    <div class=\"art-wrap\"><img class=\"episode-art\" src=\"${ep.art}\" alt=\"\" onerror=\"this.style.display='none';\"></div>\n  ` : "";
   const data = getEpisodeDataByVar(ep.dataVar);
   const scene = data?.[sceneId];
 
@@ -443,6 +449,8 @@ function renderScene(storyId, episodeId, sceneId, scene) {
   const story = getStory(storyId);
   const ep = getEpisodeById(episodeId);
 
+  const artHtml = ep?.art ? `\n    <div class=\"art-wrap\"><img class=\"episode-art\" src=\"${ep.art}\" alt=\"\" onerror=\"this.style.display='none';\"></div>\n  ` : "";
+
   render(`
     <div class="header">
       <h1>${escapeHtml(story?.title || "Story")}</h1>
@@ -452,6 +460,7 @@ function renderScene(storyId, episodeId, sceneId, scene) {
     <div class="section">
       <div class="card">
         <p style="opacity:.7; margin-top:0;">${escapeHtml(ep?.title || "")}</p>
+        ${artHtml}
         <p>${escapeHtml(scene.text || "")}</p>
 
         <div id="choices"></div>
