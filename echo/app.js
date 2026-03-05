@@ -21,8 +21,15 @@ const APP = {
     { id: 6, title: "The Rooftop — Ep 6",      dataVar: "episode6", isFree: false, categoryId: "horror" },
     { id: 7, title: "The Operator — Ep 7",     dataVar: "episode7", isFree: false, categoryId: "horror" },
     { id: 8, title: "The Truth — Ep 8",        dataVar: "episode8", isFree: false, categoryId: "horror" },
+    
+    { id: 101, title: "Late Night Messages — Ep1", dataVar: "romance1_ep1", isFree: true, categoryId: "romance" },
+{ id: 102, title: "Late Night Messages — Ep2", dataVar: "romance1_ep2", isFree: false, categoryId: "romance" },
+{ id: 103, title: "Late Night Messages — Ep3", dataVar: "romance1_ep3", isFree: false, categoryId: "romance" },
+
   ],
 };
+
+
 
 // ---------- State ----------
 let state = loadState() || {
