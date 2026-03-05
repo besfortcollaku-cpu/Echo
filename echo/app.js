@@ -467,9 +467,10 @@ function renderScene(storyId, episodeId, sceneId, scene) {
 
         <div style="margin-top:12px; display:flex; gap:10px;">
           <button class="choice" id="backBtn">Back</button>
-          ${artHtml}
 
         </div>
+                  ${artHtml}
+
       </div>
     </div>
   `);
