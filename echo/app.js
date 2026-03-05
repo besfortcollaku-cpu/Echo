@@ -463,11 +463,12 @@ function renderScene(storyId, episodeId, sceneId, scene) {
 
 <p>${escapeHtml(scene.text || "")}</p>
 
-${artHtml}
         <div id="choices"></div>
 
         <div style="margin-top:12px; display:flex; gap:10px;">
           <button class="choice" id="backBtn">Back</button>
+          ${artHtml}
+
         </div>
       </div>
     </div>
