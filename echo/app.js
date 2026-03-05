@@ -459,10 +459,11 @@ function renderScene(storyId, episodeId, sceneId, scene) {
 
     <div class="section">
       <div class="card">
-        <p style="opacity:.7; margin-top:0;">${escapeHtml(ep?.title || "")}</p>
-        ${artHtml}
-        <p>${escapeHtml(scene.text || "")}</p>
+<p style="opacity:.7; margin-top:0;">${escapeHtml(ep?.title || "")}</p>
 
+<p>${escapeHtml(scene.text || "")}</p>
+
+${artHtml}
         <div id="choices"></div>
 
         <div style="margin-top:12px; display:flex; gap:10px;">
